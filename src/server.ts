@@ -1,10 +1,10 @@
 import app from './app';
-import { SERVER_PORT } from './configs/env.config';
-import { connectDB } from './configs/mongodb.config';
+import { connectDb } from './configs/db/mongodb.config';
+import { SERVER_PORT } from './configs/env/env.config';
 
 (async () => {
   try {
-    await connectDB();
+    await connectDb();
     app.listen(SERVER_PORT, () => {
       console.log(`Server running on port ${SERVER_PORT}`);
     });
