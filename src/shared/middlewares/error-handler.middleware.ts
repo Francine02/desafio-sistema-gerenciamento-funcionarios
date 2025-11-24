@@ -16,6 +16,13 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
     });
   }
 
+  if (err instanceof SyntaxError) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Invalid JSON format',
+    });
+  }
+
   if (err instanceof BadRequestError) {
     return res.status(err.status).json({
       status: 'error',
