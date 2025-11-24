@@ -1,0 +1,1724 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sistema de gerenciamento de funcionários de uma empresa",
+    "version": "1.0.0",
+    "description": "API RESTful desenvolvida como parte de um desafio técnico para a vaga de Desenvolvedor Backend JR - Contato Seguro. O sistema oferece funcionalidades completas para gerenciamento de empresas e funcionários, incluindo criação, listagem, atualização e exclusão."
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "Servidor de desenvolvimento"
+    }
+  ],
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Empresa",
+      "description": "Operações relacionadas às empresas"
+    },
+    {
+      "name": "Funcionário",
+      "description": "Gerenciamento de funcionários"
+    }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/api/v1/companies": {
+      "post": {
+        "tags": ["Empresa"],
+        "summary": "Criar empresa",
+        "description": "Cria uma nova empresa. Recebe os dados básicos da organização e realiza validações nos campos. Retorna o registro criado com seu identificador único.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Dados para criar uma empresa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "cnpj": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                },
+                "sector": {
+                  "type": "string",
+                  "example": "TI"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Empresa criada com sucesso",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "sector": {
+                  "type": "string",
+                  "example": "TI"
+                },
+                "cnpj": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos enviados"
+          },
+          "409": {
+            "description": "Empresa já existe"
+          },
+          "422": {
+            "description": "Erro de validação Zod"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Empresa"],
+        "summary": "Listar empresas",
+        "description": "Lista todas as empresas cadastradas. Permite consultar todos os registros, possibilitando visualizar nome, cidade, setor, id e cnpj",
+        "responses": {
+          "200": {
+            "description": "Lista de empresas",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "array"
+                },
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "example": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "64123abc0987df111222333"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Empresa Exemplo LTDA"
+                        },
+                        "sector": {
+                          "type": "string",
+                          "example": "TI"
+                        },
+                        "cnpj": {
+                          "type": "string",
+                          "example": "12345678000199"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "Rua A, 123"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{id}": {
+      "delete": {
+        "tags": ["Empresa"],
+        "summary": "Excluir empresa por ID",
+        "description": "Exclui uma empresa pelo seu ID. Caso o registro exista, o recurso é deletado e uma resposta sem conteúdo é retornada.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da empresa",
+            "example": "64123abc0987df111222333"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Empresa excluída com sucesso"
+          },
+          "404": {
+            "description": "Empresa não encontrada"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Empresa"],
+        "summary": "Buscar empresa por ID.",
+        "description": "Retorna todos os dados relacionados ao ID inserido, tais como: id, nome, cnpj, cidade e setor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da empresa",
+            "example": "64123abc0987df111222333"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes da empresa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "sector": {
+                  "type": "string",
+                  "example": "TI"
+                },
+                "cnpj": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Empresa näo encontrada"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Empresa"],
+        "summary": "Atualizar empresa",
+        "description": "Atualiza completamente os dados de uma empresa. Os dados nome, cidade e setor säo obrigátorios para atualizar a empresa",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da empresa a ser atualizada",
+            "example": "64123abc0987df111222333"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Dados para atualizar a empresa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Novo Nome da Empresa"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Novo Endereço, São Paulo"
+                },
+                "sector": {
+                  "type": "string",
+                  "example": "Financeiro"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Empresa atualizada com sucesso",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Novo Nome da Empresa"
+                },
+                "sector": {
+                  "type": "string",
+                  "example": "Financeiro"
+                },
+                "cnpj": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Novo Endereço, São Paulo"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Empresa não encontrada"
+          },
+          "422": {
+            "description": "Erro de validação Zod"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/api/v1/employees": {
+      "post": {
+        "tags": ["Funcionário"],
+        "summary": "Criar funcionário",
+        "description": "Cria um novo funcionário vinculado a uma empresa. Os campos name, email, position, password e company_id säo obrigátorios. Os campos termination_date e status säo opcionais, sendo o status por padräo ACTIVE. A senha precisa conter entre 8 - 64 caracteres, ter um número, uma letra maiúscula, uma minúscula e um caractere especial",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Dados para criar um funcionário",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "joao@gmail.com"
+                },
+                "position": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Teste12?"
+                },
+                "company_id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "termination_date": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Funcionário criado com sucesso",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "company_id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "joao@gmail.com"
+                },
+                "position": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                },
+                "termination_date": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "employee_id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "created_at": {
+                  "type": "string",
+                  "example": "23/11/2025, 20:06:06"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos enviados"
+          },
+          "404": {
+            "description": "Empresa informada não existe"
+          },
+          "409": {
+            "description": "Funcionário já existe"
+          },
+          "422": {
+            "description": "Erro de validação Zod"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Funcionário"],
+        "summary": "Listar funcionários",
+        "description": "Retorna todos os funcionários cadastrados no sistema, incluindo informações como company_id, name, email, position, status, employee_id, created_at e termination_date",
+        "responses": {
+          "200": {
+            "description": "Lista de funcionários",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "array"
+                },
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "example": {
+                      "type": "object",
+                      "properties": {
+                        "company_id": {
+                          "type": "string",
+                          "example": "65123abc0987df111222333"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "João Silva"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "joao@gmail.com"
+                        },
+                        "position": {
+                          "type": "string",
+                          "example": "Analista"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "ACTIVE"
+                        },
+                        "termination_date": {
+                          "type": "string",
+                          "example": "2004-12-15"
+                        },
+                        "employee_id": {
+                          "type": "string",
+                          "example": "64123abc0987df111222333"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "23/11/2025, 20:06:06"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/api/v1/employees/{id}": {
+      "delete": {
+        "tags": ["Funcionário"],
+        "summary": "Excluir funcionário por ID",
+        "description": "Exclui um funcionário existente pelo seu ID. Caso exista, o recurso é removido permanentemente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do funcionário",
+            "example": "65123abc0987df111222333"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Funcionário excluído com sucesso"
+          },
+          "404": {
+            "description": "Funcionário não encontrado"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Funcionário"],
+        "summary": "Atualizar funcionário",
+        "description": "Atualiza completamente os dados de um funcionário. Campos como name, password e position são obrigatórios. A senha precisa conter entre 8 - 64 caracteres, ter um número, uma letra maiúscula, uma minúscula e um caractere especial",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do funcionário a ser atualizado",
+            "example": "65123abc0987df111222333"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "Dados para atualizar o funcionário",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "position": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Teste12?"
+                },
+                "termination_date": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Funcionário atualizado com sucesso",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "company_id": {
+                  "type": "string",
+                  "example": "65123abc0987df111222333"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "joao@gmail.com"
+                },
+                "position": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                },
+                "termination_date": {
+                  "type": "string",
+                  "example": "2004-12-15"
+                },
+                "employee_id": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "created_at": {
+                  "type": "string",
+                  "example": "23/11/2025, 20:06:06"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Funcionário não encontrado"
+          },
+          "422": {
+            "description": "Erro de validação Zod"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    },
+    "/api/v1/employees/company/{id}": {
+      "get": {
+        "tags": ["Funcionário"],
+        "summary": "Listar funcionários por empresa",
+        "description": "Lista todos os funcionários vinculados a uma empresa específica.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da empresa",
+            "example": "64123abc0987df111222333"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Funcionários encontrados",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "array"
+                },
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "example": {
+                      "type": "object",
+                      "properties": {
+                        "company_id": {
+                          "type": "string",
+                          "example": "65123abc0987df111222333"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "João Silva"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "joao@gmail.com"
+                        },
+                        "position": {
+                          "type": "string",
+                          "example": "Analista"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "ACTIVE"
+                        },
+                        "termination_date": {
+                          "type": "string",
+                          "example": "2004-12-15"
+                        },
+                        "employee_id": {
+                          "type": "string",
+                          "example": "64123abc0987df111222333"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "23/11/2025, 20:06:06"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Empresa não encontrada"
+          },
+          "500": {
+            "description": "Erro interno"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateCompanyDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": ["name", "cnpj", "city", "sector"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome da empresa"
+                }
+              }
+            },
+            "cnpj": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "cnpj"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "CNPJ da empresa"
+                }
+              }
+            },
+            "city": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Endereço da empresa"
+                }
+              }
+            },
+            "sector": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "TI"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Setor de atuação"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateCompanyDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": ["name", "city", "sector"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome da empresa"
+                }
+              }
+            },
+            "city": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Endereço da empresa"
+                }
+              }
+            },
+            "sector": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "TI"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Setor de atuação"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CompanyResponseDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "65123abc0987df111222333"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "ID da empresa (MongoDB ObjectId)"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Empresa Exemplo LTDA"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome da empresa"
+                }
+              }
+            },
+            "cnpj": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "cnpj"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "12345678000199"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "CNPJ da empresa"
+                }
+              }
+            },
+            "city": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Rua Exemplo, 123 - São Paulo"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Endereço da empresa"
+                }
+              }
+            },
+            "sector": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "TI"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Setor de atuação da empresa"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "CompaniesResponseDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "array"
+        },
+        "items": {
+          "$ref": "#/definitions/CompanyResponseDto"
+        }
+      }
+    },
+    "CreateEmployeeDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": ["name", "email", "position", "password", "company_id"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome do funcionário"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "email"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "joao@gmail.com"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Email do funcionário"
+                }
+              }
+            },
+            "position": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Cargo do funcionário"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Teste12?"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Senha do funcionário. Precisa ter entre 8 - 64 caracteres, um número, uma letra maúscula, uma minúscula e um simbolo"
+                }
+              }
+            },
+            "company_id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "ID da empresa gerado pelo MongoDB"
+                }
+              }
+            },
+            "termination_date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "date"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Data de desligamento do funcionário"
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "enum": {
+                  "type": "array",
+                  "example": ["ACTIVE", "INACTIVE"],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateEmployeeDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "required": {
+          "type": "array",
+          "example": ["name", "password", "position"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome do funcionário"
+                }
+              }
+            },
+            "position": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Cargo do funcionário"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Teste12?"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Senha do funcionário. Precisa ter entre 8 - 64 caracteres, um número, uma letra maúscula, uma minúscula e um simbolo"
+                }
+              }
+            },
+            "termination_date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "date"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Data de desligamento do funcionário"
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "enum"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Status do funcionário, sendo ACTIVE ou INACTIVE"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "EmployeeResponseDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "employee_id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "64123abc0987df111222333"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "ID do funcionário (MongoDB ObjectId)"
+                }
+              }
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "João Silva"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Nome do funcionário"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "email"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "joao@gmail.com"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Email do funcionário"
+                }
+              }
+            },
+            "position": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Analista"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Cargo do funcionário"
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "enum"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "ACTIVE"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Status do funcionário (ACTIVE ou INACTIVE)"
+                }
+              }
+            },
+            "company_id": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "65123abc0987df111222333"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "ID da empresa vinculada (MongoDB ObjectId)"
+                }
+              }
+            },
+            "created_at": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "23/11/2025, 20:06:06"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Data de criação do funcionário"
+                }
+              }
+            },
+            "termination_date": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "format": {
+                  "type": "string",
+                  "example": "date"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "2025-11-23"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Data de desligamento do funcionário (opcional)"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "EmployeesResponseDto": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "array"
+        },
+        "items": {
+          "$ref": "#/definitions/EmployeeResponseDto"
+        }
+      }
+    },
+    "ErrorZodValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Validation failed"
+                }
+              }
+            },
+            "issues": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "array"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Lista de erros de validação retornados pelo Zod"
+                },
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "example": {
+                              "type": "array",
+                              "example": ["email"],
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "message": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            },
+                            "example": {
+                              "type": "string",
+                              "example": "Invalid email"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorInvalidJson": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Invalid JSON format"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "JSON enviado está mal formatado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorBadRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Invalid parameters provided"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorEntityAlreadyExists": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Entity already exists"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorNotFound": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Resource not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ErrorInternalServer": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "error"
+                }
+              }
+            },
+            "message": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
