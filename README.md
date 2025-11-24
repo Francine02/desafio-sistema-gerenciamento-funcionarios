@@ -46,7 +46,7 @@ A API utiliza Swagger para documentar os endpoints, sendo possível acessar, por
 
 ## Sobre o desenvolvimento:
 - A API foi desenvolvida com base nos requisitos do teste, incluindo alguns diferenciais, como documentação via Swagger e conteinerização com Docker para o banco e para a API.
-- O projeto foi estruturado seguindo princípios de modularidade e inspiração na Clean Architecture.
+- O projeto foi estruturado seguindo princípios de modularidade e em camadas.
 - A convenção de nomenclatura utilizada segue o padrão kebab-case.pasta.ts.
 
 O projeto está organizado da seguinte forma:
