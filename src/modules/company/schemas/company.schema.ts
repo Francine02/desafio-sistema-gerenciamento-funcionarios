@@ -13,7 +13,7 @@ export const companySchema = z.object({
   sector: z
     .string()
     .trim()
-    .min(3, 'Sector must have at least 3 characters')
+    .min(2, 'Sector must have at least 3 characters')
     .max(200, 'Sector cannot exceed 200 characters')
     .regex(NAME_REGEX, 'Sector must have only letters'),
 
