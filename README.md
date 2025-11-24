@@ -109,7 +109,7 @@ docker compose up
 
 A API rodará em por padrão:
 ```
-http://localhost:3000
+http://localhost:3000/api/v1
 ```
 
 Swagger:
@@ -119,6 +119,7 @@ http://localhost:3000/api-docs/
 ---
 
 4. Rodar sem Docker (modo manual)
+   
 Instale as dependências:
 ```
 npm install
